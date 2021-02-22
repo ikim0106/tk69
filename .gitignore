@@ -1,0 +1,9 @@
+#dependencies
+node_modules
+
+#thicc files
+auth.json
+userData.json
+
+#vscode junk
+.vscode

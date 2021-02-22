@@ -1,0 +1,27 @@
+{
+  "name": "Ricebot",
+  "version": "1.0.0",
+  "description": "A discord.js bot dedicated to the Rice guild.",
+  "main": "main.js",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "discord.js-commando": "^0.12.2",
+    "request": "^2.88.2",
+    "xml-js": "^1.6.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ikim0106/Ricebot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ikim0106/Ricebot/issues"
+  },
+  "homepage": "https://github.com/ikim0106/Ricebot#readme"
+}
