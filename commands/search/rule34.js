@@ -45,8 +45,9 @@ class rule34 extends commando.Command {
       console.log(tags)
       return tags
     }
-
-    request('https://rule34.xxx/index.php?page=dapi&s=post&q=index&tags=' + args,
+    if(!args) message.reply("Please specify tags")
+    else {
+      request('https://rule34.xxx/index.php?page=dapi&s=post&q=index&tags=' + args,
       function (error, response, body) {
         var data, error, unparsedJSON
         try {
@@ -54,7 +55,7 @@ class rule34 extends commando.Command {
           data = JSON.parse(unparsedJSON)
         } catch (error) {
           console.log(error)
-          message.channel.send('Unknown error occured, tell troll kim to fix his shit')
+          message.channel.send('Unknown error occured, tell tk69#4001 to fix his shit')
           return
         }
         if (!data) {
@@ -74,15 +75,15 @@ class rule34 extends commando.Command {
         console.log('result ', result)
         if(!result)
           message.channel.send(`No results for '${args}'`)
-        else {
-          let nastyTagsArray = lookForNasty(result)
-          if(nastyTagsArray.length!=0){
-            let tagsList=''
+          else {
+            let nastyTagsArray = lookForNasty(result)
+            if(nastyTagsArray.length!=0){
+              let tagsList=''
             for(let i=0;i<nastyTagsArray.length; i++)
             {
               tagsList+=nastyTagsArray[i]+', '  
             }
-
+            
             // tagsList.replace('undefined','')
             message.channel.send('Score: ' + result._attributes.score + '\n' + `|| ${result._attributes.file_url} ||`+ `\nThis image has been censored by a spoiler due to the following tag(s): ${tagsList.substring(0,tagsList.length-2)}`)
           } 
@@ -93,7 +94,8 @@ class rule34 extends commando.Command {
           }
         }
       })
+    }
   }
 }
 
-module.exports = rule34
+  module.exports = rule34

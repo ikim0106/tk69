@@ -33,7 +33,7 @@ bot.registry.registerGroup('search')
 bot.registry.registerGroup('junk')
 bot.registry.registerGroup('music')
 bot.registry.registerGroup('todo')
-bot.registry.registerGroup('verify')
+bot.registry.registerGroup('rice')
 bot.registry.registerCommandsIn(__dirname + "/commands")
 bot.registry.registerDefaults()
 

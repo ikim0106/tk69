@@ -1,11 +1,10 @@
-const { GuildMemberManager } = require('discord.js');
 const commando = require('discord.js-commando')
 
 class verify extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'verify',
-      group: 'verify',
+      group: 'rice',
       memberName: 'verify',
       description: 'verifies members in the Rice discord',
     });
@@ -15,8 +14,8 @@ class verify extends commando.Command {
     let riceDiscord = message.guild
     let generalChannel = riceDiscord.channels.cache.get("812000499510935555")
     let memberRole = riceDiscord.roles.cache.get("812367604400390175")
-    if (message.member.roles.cache.has(memberRole)){
-        member.createDM.send("You are already verified!")
+    if (message.channel.id!="812659335925596200"){
+        message.reply("You may not use that command in this channel")
     }
     else {
         message.member.setNickname(args)

@@ -46,8 +46,9 @@ class gelbooru extends commando.Command {
       console.log(tags)
       return tags
     }
-
-    request('https://gelbooru.com/index.php?page=dapi&s=post&q=index&tags=' + args,
+    if (!args) message.reply("Please specify tags")
+    else {
+      request('https://gelbooru.com/index.php?page=dapi&s=post&q=index&tags=' + args,
       function (error, response, body) {
         var data, error, unparsedJSON
         try {
@@ -55,7 +56,7 @@ class gelbooru extends commando.Command {
           data = JSON.parse(unparsedJSON)
         } catch (error) {
           console.log(error)
-          message.channel.send('Unknown error occured, tell troll kim to fix his shit')
+          message.channel.send('Unknown error occured, tell tk69#4001 to fix his shit')
           return
         }
         if (!data) {
@@ -74,7 +75,7 @@ class gelbooru extends commando.Command {
         var result = filteredPosts[randomNumber]
         console.log('result ', result)
         if(!result)
-          message.channel.send(`No results for '${args}'`)
+        message.channel.send(`No results for '${args}'`)
         else {
           let nastyTagsArray = lookForNasty(result)
           if(nastyTagsArray.length!=0){
@@ -83,18 +84,19 @@ class gelbooru extends commando.Command {
             {
               tagsList+=nastyTagsArray[i]+', '  
             }
-
+            
             // tagsList.replace('undefined','')
             message.channel.send('Score: ' + result._attributes.score + '\n' + `|| ${result._attributes.file_url} ||`+ `\nThis image has been censored by a spoiler due to the following tag(s): ${tagsList.substring(0,tagsList.length-2)}`)
           } 
           else
           {
             message.channel.send('Score: ' + result._attributes.score + '\n' + result._attributes.file_url)
-
+            
           }
         }
       })
+    }
   }
 }
-
-module.exports = gelbooru
+  
+  module.exports = gelbooru
