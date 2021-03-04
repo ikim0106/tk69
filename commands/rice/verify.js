@@ -11,7 +11,7 @@ class verify extends commando.Command {
   }
 
   async run(message, args) {
-    if (!args) message.reply("Wrong usage of the !vote command, try agin!");
+    if (!args) message.reply("Wrong usage of the !verify command, try agin!");
     else {
 
       let riceDiscord = message.guild

@@ -63,7 +63,7 @@ exports.printList = function (message, inputArray) {
       })
       collector.on('collect', async function (r) {
         if (r.emoji.name === '➡') {
-          message.clearReactions()
+          message.reactions.removeAll()
           pageNumber++
           await sleep(100)
           if (pageNumber <= totalPages) {
@@ -77,7 +77,7 @@ exports.printList = function (message, inputArray) {
           }
         }
         if (r.emoji.name === '⬅') {
-          message.clearReactions()
+          message.reacions.removeAll()
           pageNumber--
           await sleep(100)
           if (pageNumber > 0) {
