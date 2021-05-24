@@ -46,8 +46,8 @@ bot.on('message', (message) => {
 })
 
 bot.on('message', (message) => {
-	if (message.content.toLowerCase().startsWith('!add ')) {
-		let item = message.content.replace('!add ', '')
+	if (message.content.toLowerCase().startsWith('=add ')) {
+		let item = message.content.replace('=add ', '')
 		let userData = [message.author.id, item]
 		if (data.length == 0) {
 			data.push(userData)
@@ -73,8 +73,8 @@ bot.on('message', (message) => {
 		}
 		console.log(data)
 	}
-	if (message.content.toLowerCase().startsWith('!remove ')) {
-		let index = parseInt(message.content.replace('!remove ', ''))
+	if (message.content.toLowerCase().startsWith('=remove ')) {
+		let index = parseInt(message.content.replace('=remove ', ''))
 		if (data.length == 0) {
 			message.channel.send('There is nothing to remove!')
 		}
@@ -99,7 +99,7 @@ bot.on('message', (message) => {
 		}
 		console.log(data)
 	}
-	if (message.content.toLowerCase().startsWith('!list')) {
+	if (message.content.toLowerCase().startsWith('=list')) {
 		if (data.length == 0) {
 			message.channel.send('You have nothing in your list!')
 		}
