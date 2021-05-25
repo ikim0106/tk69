@@ -25,6 +25,8 @@ const commando = require('discord.js-commando')
 const bot = new commando.Client({
 	owner: auth.ownerID
 })
+const discord = require('discord.js')
+const status = new discord.Client()
 
 //var json = JSON.parse(auth.token);
 console.log('token', auth.token)
@@ -36,6 +38,16 @@ bot.registry.registerGroup('todo')
 bot.registry.registerGroup('ristonia')
 bot.registry.registerCommandsIn(__dirname + "/commands")
 bot.registry.registerDefaults()
+
+status.on('ready', () => {
+	bot.user.setStatus('available')
+	bot.user.setPresence({
+			game: {
+					name: 'bot written by tobito',
+					type: "STREAMING",
+			}
+	});
+})
 
 bot.on('message', (message) => {
 	if (message.content == 'ping') {
