@@ -18,7 +18,7 @@ class magesrole extends commando.Command {
     const msg = new MessageEmbed()
       .setTitle("Magicians")
       .setColor("#FFC0CB")
-      .setDescription("Battle Mage: <:BattleMage:846683377624023081> | Beast Tamer: <:BeastTamer:846683377599512616> | Marksman: <:Bishop:846683377633591296> | Mercedes: <:BlazeWizard:846683377717346304> | Pathfinder: <:Evan:846683377645912074> | Wild Hunter: <:FirePoison:846683377671471104> | Wind Archer: <:IceLightning:846683377608163329> | Illium: <:Illium:846683377738317824> | Kanna: <:Kanna:846683377703583805> | Kinesis: <:Kinesis:846683377679597588> | Luminous: <:Luminous:846683377935712266>")
+      .setDescription("Battle Mage: <:BattleMage:846683377624023081> | Beast Tamer: <:BeastTamer:846683377599512616> | Bishop: <:Bishop:846683377633591296> | BlazeWizard: <:BlazeWizard:846683377717346304> | Evan: <:Evan:846683377645912074> | Fire Poison: <:FirePoison:846683377671471104> | Ice Lightning: <:IceLightning:846683377608163329> | Illium: <:Illium:846683377738317824> | Kanna: <:Kanna:846683377703583805> | Kinesis: <:Kinesis:846683377679597588> | Luminous: <:Luminous:846683377935712266>")
     message.channel.send({
       embed: msg
     }).then(embedMessage => {
