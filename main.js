@@ -39,6 +39,27 @@ async function startCollecting(filter, chid, msgid) {
 	})
 }
 
+async function giveawayCollect(filter, chid, msgid) {
+	const rolesChannel = bot.channels.cache.get(chid)
+	let testmsg = await rolesChannel.messages.fetch(msgid)
+	let ApeSquad = testmsg.guild
+
+	const collector = testmsg.createReactionCollector(filter, {
+		dispose: true
+	})
+
+	collector.on('collect', async function (reaction, user) {
+		let role = ApeSquad.roles.cache.find(role => role.name === "Giveaways")
+		let member = ApeSquad.members.cache.get(user.id);
+		member.roles.add(role)
+	})
+	collector.on('remove', async function (reaction, user) {
+		let role = ApeSquad.roles.cache.find(role => role.name === "Giveaways")
+		let member = ApeSquad.members.cache.get(user.id);
+		member.roles.remove(role)
+	})
+}
+
 console.log('loaded from userData.json', data)
 
 const commando = require('discord.js-commando')
@@ -80,6 +101,10 @@ bot.on('ready', async function() {
 		return ['BattleMage', 'BeastTamer', 'Bishop', 'BlazeWizard', 'Evan', 'FirePoison', 'IceLightning' ,'Illium', 'Kanna', 'Kinesis', 'Luminous'].includes(reaction.emoji.name) && !user.bot;
 	}
 
+	const giveawayFilter = (reaction, user) => {
+		return ['catto'].includes(reaction.emoji.name) && !user.bot;
+	}
+
 	//842098209303822407 = Dan
 	//728656476352151681 = Moon
 	startCollecting(warriorsFilter, '842098209303822407', '847885495505387520')
@@ -96,6 +121,8 @@ bot.on('ready', async function() {
 
 	startCollecting(magesFilter, '842098209303822407', '847885541533417523')
 	startCollecting(magesFilter, '728656476352151681', '847886435741597776')
+
+	giveawayCollect(giveawayFilter, '842098209303822407', '847906712740167711')
 
 	// collector.on('collect', async function (reaction, user) {
 	// 	let role = ApeSquad.roles.cache.find(role => role.name === reaction._emoji.name)

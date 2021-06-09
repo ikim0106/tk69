@@ -133,7 +133,7 @@ class giveaway extends commando.Command {
 
         collector.on('end', async function (collected, reason) {
             let users = collected.array()[0].users.cache.array()
-            console.log(users)
+            // console.log(users)
 
             let indexOfUwUbot=0;
             for(let p =0; p<users.length; p++) {
