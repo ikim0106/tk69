@@ -72,14 +72,14 @@ class giveaway extends commando.Command {
 
         const msg = new MessageEmbed()
             .setTitle(reward)
-            .setDescription(`React with <:catto:847135702504177674> to enter the giveaway!\nTime remaining: ${kekdays}, ${kekhours}, ${kekminutes}.\nHost: ${host}`)
+            .setDescription(`React with <a:mushroom:845192816304062464> to enter the giveaway!\nTime remaining: ${kekdays}, ${kekhours}, ${kekminutes}.\nHost: ${host}`)
             .setFooter(footer1)
             .setColor("#FFC0CB")
 
-        message.channel.send(`<:catto:847135702504177674> GIVEAWAY <:catto:847135702504177674> <@&847905157840765008>`,{
+        message.channel.send(`<a:mushroom:845192816304062464> GIVEAWAY <a:mushroom:845192816304062464> <@&847905157840765008>`,{
             embed: msg
         }).then(embedMessage => {
-            embedMessage.react("<:catto:847135702504177674>")
+            embedMessage.react("<a:mushroom:845192816304062464>")
             
         let kekw = setInterval(() => {
             duration-=60000
@@ -101,7 +101,7 @@ class giveaway extends commando.Command {
             else{
             const msg2 = new MessageEmbed()
                 .setTitle(reward)
-                .setDescription(`React with <:catto:847135702504177674> to enter the giveaway!\nTime remaining: ${kekdays}, ${kekhours}, ${kekminutes}\nHost: ${host}`)
+                .setDescription(`React with <a:mushroom:845192816304062464> to enter the giveaway!\nTime remaining: ${kekdays}, ${kekhours}, ${kekminutes}\nHost: ${host}`)
                 .setFooter(footer1)
                 .setColor("#FFC0CB")
             embedMessage.edit(msg2)
@@ -112,7 +112,7 @@ class giveaway extends commando.Command {
 
             
         const filter = (reaction, user) => {
-            return ['catto', 'shadedumb'].includes(reaction.emoji.name) && !user.bot;
+            return ['mushroom', 'shadedumb'].includes(reaction.emoji.name) && !user.bot;
         }
 
         let ApeSquad = message.guild
@@ -154,7 +154,7 @@ class giveaway extends commando.Command {
                 for(let q = 0; q<noOfWinners; q++) {
                     announceMsg+=`${randNums[q]} `
                 }
-                announceMsg+='Congratulations! <:catto:847135702504177674>'
+                announceMsg+='Congratulations! <a:mushroom:845192816304062464>'
                 message.channel.send(announceMsg)
 
 
