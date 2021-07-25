@@ -39,34 +39,15 @@ async function startCollecting(filter, chid, msgid) {
 	})
 }
 
-async function giveawayCollect(filter, chid, msgid) {
-	const rolesChannel = bot.channels.cache.get(chid)
-	let testmsg = await rolesChannel.messages.fetch(msgid)
-	let ApeSquad = testmsg.guild
-
-	const collector = testmsg.createReactionCollector(filter, {
-		dispose: true
-	})
-
-	collector.on('collect', async function (reaction, user) {
-		let role = ApeSquad.roles.cache.find(role => role.name === "Giveaways")
-		let member = ApeSquad.members.cache.get(user.id);
-		member.roles.add(role)
-	})
-	collector.on('remove', async function (reaction, user) {
-		let role = ApeSquad.roles.cache.find(role => role.name === "Giveaways")
-		let member = ApeSquad.members.cache.get(user.id);
-		member.roles.remove(role)
-	})
-}
-
 console.log('loaded from userData.json', data)
 
 const commando = require('discord.js-commando')
 const bot = new commando.Client({
-	owner: auth.ownerID
+	owner: auth.ownerID,
+	commandPrefix: '='
 })
 const discord = require('discord.js')
+const { isNumber } = require('util')
 
 //var json = JSON.parse(auth.token);
 console.log('token', auth.token)
@@ -76,6 +57,7 @@ bot.registry.registerGroup('junk')
 bot.registry.registerGroup('music')
 bot.registry.registerGroup('todo')
 bot.registry.registerGroup('ristonia')
+bot.registry.registerGroup('leaderboard')
 bot.registry.registerCommandsIn(__dirname + "/commands")
 bot.registry.registerDefaults()
 
@@ -101,39 +83,13 @@ bot.on('ready', async function() {
 		return ['BattleMage', 'BeastTamer', 'Bishop', 'BlazeWizard', 'Evan', 'FirePoison', 'IceLightning' ,'Illium', 'Kanna', 'Kinesis', 'Luminous'].includes(reaction.emoji.name) && !user.bot;
 	}
 
-	const giveawayFilter = (reaction, user) => {
-		return ['catto'].includes(reaction.emoji.name) && !user.bot;
-	}
-
-	//842098209303822407 = Dan
 	//728656476352151681 = Moon
-	startCollecting(warriorsFilter, '842098209303822407', '847885495505387520')
+
 	startCollecting(warriorsFilter, '728656476352151681', '847886330482786314')
-
-	startCollecting(archersFilter, '842098209303822407', '847885513595420682')
 	startCollecting(archersFilter, '728656476352151681', '847886424438865960')
-
-	startCollecting(thievesFilter, '842098209303822407', '847885522172641280')
 	startCollecting(thievesFilter, '728656476352151681', '847886442956062740')
-
-	startCollecting(piratesFilter, '842098209303822407', '847885532834955284')
 	startCollecting(piratesFilter, '728656476352151681', '847886453509062666')
-
-	startCollecting(magesFilter, '842098209303822407', '847885541533417523')
 	startCollecting(magesFilter, '728656476352151681', '847886435741597776')
-
-	giveawayCollect(giveawayFilter, '842098209303822407', '847906712740167711')
-
-	// collector.on('collect', async function (reaction, user) {
-	// 	let role = ApeSquad.roles.cache.find(role => role.name === reaction._emoji.name)
-	// 	let member = ApeSquad.members.cache.get(user.id);
-	// 	member.roles.add(role)
-	// })
-	// collector.on('remove', async function (reaction, user) {
-	// 	let role = ApeSquad.roles.cache.find(role => role.name === reaction._emoji.name)
-	// 	let member = ApeSquad.members.cache.get(user.id);
-	// 	member.roles.remove(role)
-	// })
 })
 
 bot.on('message', (message) => {
@@ -147,30 +103,40 @@ bot.on('message', (message) => {
 bot.on('message', (message) => {
 	if (message.content.toLowerCase().startsWith('=add ')) {
 		let item = message.content.replace('=add ', '')
-		let userData = [message.author.id, item]
-		if (data.length == 0) {
-			data.push(userData)
-			message.channel.send('Item added!')
-			writeScript.wf('./userData.json', JSON.stringify(data))
-		} else {
-			let counter = 0
-			for (let i = 0; i < data.length; i++) {
-				if (data[i][0] == message.author.id) {
-					console.log('list exists')
-					data[i].push(item)
-					counter++
-					message.channel.send('Item added!')
+		let isnum = /^\d+$/.test(item)
+		if(isnum && Number(item<=100)) {
+			let userData = [message.author.id, item]
+			if (data.length == 0) {
+				data.push(userData)
+				message.react("<:pepeOK:825037688402214943>")
+				writeScript.wf('./userData.json', JSON.stringify(data))
+			} else {
+				let counter = 0
+				for (let i = 0; i < data.length; i++) {
+					if (data[i][0] == message.author.id) {
+						console.log('list exists')
+						data[i].push(item)
+						counter++
+						message.react("<:pepeOK:825037688402214943>")
+						writeScript.wf('./userData.json', JSON.stringify(data))
+						break
+					}
+				}
+				if (counter == 0) {
+					data.push(userData)
+					message.react("<:pepeOK:825037688402214943>")
 					writeScript.wf('./userData.json', JSON.stringify(data))
-					break
 				}
 			}
-			if (counter == 0) {
-				data.push(userData)
-				message.channel.send(`Item added!`)
-				writeScript.wf('./userData.json', JSON.stringify(data))
-			}
+			console.log(data)
 		}
-		console.log(data)
+		else {
+			message.reply("Invalid input")
+		}
+	}
+	if (message.content.toLowerCase().startsWith('=resetleaderboard')) {
+		data = []
+		writeScript.wf('./userData.json', '')
 	}
 	if (message.content.toLowerCase().startsWith('=remove ')) {
 		let index = parseInt(message.content.replace('=remove ', ''))

@@ -76,7 +76,7 @@ class giveaway extends commando.Command {
             .setFooter(footer1)
             .setColor("#FFC0CB")
 
-        message.channel.send(`<a:mushroom:845192816304062464> GIVEAWAY <a:mushroom:845192816304062464> <@&847905157840765008>`,{
+        message.channel.send(`<a:mushroom:845192816304062464> GIVEAWAY <a:mushroom:845192816304062464>`,{
             embed: msg
         }).then(embedMessage => {
             embedMessage.react("<a:mushroom:845192816304062464>")
