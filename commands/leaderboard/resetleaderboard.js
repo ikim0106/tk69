@@ -12,9 +12,14 @@ class resetleaderboard extends commando.Command {
     });
   }
 
-  async run(message) {
-    writeScript.wf('path.resolve(__dirname, "../../userData.json', '')
-    message.reply("Leaderboard reset!")
+  async run(message) {      
+    if(!message.member.hasPermission("MANAGE_MESSAGES")){
+      message.reply("u dont have perms for this pepelaf")
+    }
+    else {
+      writeScript.wf('path.resolve(__dirname, "../../userData.json', '')
+      message.reply("Leaderboard reset!")
+    }
   }
 }
 

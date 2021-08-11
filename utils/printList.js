@@ -77,7 +77,7 @@ exports.printList = function (message, inputArray) {
           }
         }
         if (r.emoji.name === '⬅') {
-          message.reacions.removeAll()
+          message.reactions.removeAll()
           pageNumber--
           await sleep(100)
           if (pageNumber > 0) {
