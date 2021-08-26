@@ -10,7 +10,6 @@
     "request": "^2.88.2",
     "xml-js": "^1.6.11"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

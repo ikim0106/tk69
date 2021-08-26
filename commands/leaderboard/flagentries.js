@@ -1,21 +1,20 @@
 const commando = require('discord.js-commando')
 const fs = require('fs')
 const path = require('path')
-let modifiedPrintList = require('../../utils/printListMod')
+let modifiedPrintList = require('../../utils/printListModCount')
 
-class leaderboard extends commando.Command {
+class flagentries extends commando.Command {
   constructor(client) {
     super(client, {
-      name: 'leaderboard',
+      name: 'flagentries',
       group: 'leaderboard',
-      memberName: 'leaderboard',
-      description: 'shows flag entry leaderboard',
+      memberName: 'flagentries',
+      description: 'shows everyone\'s flag entries',
     });
   }
 
   async run(message) {
     let processedData=[]
-    let noOfEntries = []
     let file = fs.readFileSync(path.resolve(__dirname, "../../userData.json"), 'utf-8')
     if(file=='') message.reply("No leaderboard entries to show")
     else{
@@ -43,14 +42,13 @@ class leaderboard extends commando.Command {
         for(let q =1; q<rawdata[i].length; q++) {
           totPts+=parseInt(rawdata[i][q])
         }
-        someShit.push(totPts)
-        noOfEntries.push(rawdata[i].length-1)
+        someShit.push(rawdata[i].length-1)
         
         // console.log(someShit)
         processedData.push(someShit)
       }
-      
-      if(!message.member.hasPermission("MANAGE_MESSAGES") && !message.member.roles.cache.has('877585031449677875')){
+
+      if(!message.member.roles.cache.has('877585031449677875') && !message.member.hasPermission("MANAGE_MESSAGES")){
         message.reply("u dont have perms for this pepelaf")
       } 
       else {
@@ -70,9 +68,8 @@ class leaderboard extends commando.Command {
           }
         }
         processedData.reverse()
-        console.log("asd", noOfEntries)
         
-        modifiedPrintList.printListMod(message, processedData, noOfEntries)
+        modifiedPrintList.printListModCount(message, processedData)
         processedData=[]
       }
     }
@@ -80,5 +77,5 @@ class leaderboard extends commando.Command {
 
 }
   
-  module.exports = leaderboard
+  module.exports = flagentries
   

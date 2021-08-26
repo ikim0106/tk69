@@ -42,12 +42,15 @@ async function startCollecting(filter, chid, msgid) {
 console.log('loaded from userData.json', data)
 
 const commando = require('discord.js-commando')
+const intents = ["GUILDS", "GUILD_MEMBERS"]
 const bot = new commando.Client({
 	owner: auth.ownerID,
 	commandPrefix: '='
 })
 const discord = require('discord.js')
-const { isNumber } = require('util')
+const {
+	isNumber
+} = require('util')
 
 //var json = JSON.parse(auth.token);
 console.log('token', auth.token)
@@ -61,7 +64,7 @@ bot.registry.registerGroup('leaderboard')
 bot.registry.registerCommandsIn(__dirname + "/commands")
 bot.registry.registerDefaults()
 
-bot.on('ready', async function() {
+bot.on('ready', async function () {
 
 	const warriorsFilter = (reaction, user) => {
 		return ['Adele', 'Aran', 'Blaster', 'DarkKnight', 'DawnWarrior', 'DemonSlayer', 'DemonAvenger', 'Hayato', 'Hero', 'Kaiser', 'Mihile', 'Paladin', 'Zero'].includes(reaction.emoji.name) && !user.bot;
@@ -72,15 +75,15 @@ bot.on('ready', async function() {
 	}
 
 	const thievesFilter = (reaction, user) => {
-		return ['Cadena', 'DualBlade', 'Hoyoung', 'NightLord', 'NightWalker', 'Phantom', 'Xenon' ,'Shadower'].includes(reaction.emoji.name) && !user.bot;
+		return ['Cadena', 'DualBlade', 'Hoyoung', 'NightLord', 'NightWalker', 'Phantom', 'Xenon', 'Shadower'].includes(reaction.emoji.name) && !user.bot;
 	}
 
 	const piratesFilter = (reaction, user) => {
-		return ['AngelicBuster', 'Ark', 'Buccaneer', 'Cannoneer', 'Corsair', 'Jett', 'Mechanic' ,'ThunderBreaker', 'Shade'].includes(reaction.emoji.name) && !user.bot;
+		return ['AngelicBuster', 'Ark', 'Buccaneer', 'Cannoneer', 'Corsair', 'Jett', 'Mechanic', 'ThunderBreaker', 'Shade'].includes(reaction.emoji.name) && !user.bot;
 	}
 
 	const magesFilter = (reaction, user) => {
-		return ['BattleMage', 'BeastTamer', 'Bishop', 'BlazeWizard', 'Evan', 'FirePoison', 'IceLightning' ,'Illium', 'Kanna', 'Kinesis', 'Luminous'].includes(reaction.emoji.name) && !user.bot;
+		return ['BattleMage', 'BeastTamer', 'Bishop', 'BlazeWizard', 'Evan', 'FirePoison', 'IceLightning', 'Illium', 'Kanna', 'Kinesis', 'Luminous'].includes(reaction.emoji.name) && !user.bot;
 	}
 
 	//728656476352151681 = Moon
@@ -90,6 +93,22 @@ bot.on('ready', async function() {
 	startCollecting(thievesFilter, '728656476352151681', '847886442956062740')
 	startCollecting(piratesFilter, '728656476352151681', '847886453509062666')
 	startCollecting(magesFilter, '728656476352151681', '847886435741597776')
+})
+
+bot.on('guildMemberRemove', (member) => {
+	console.log(`${member.user.username} has left the server`)
+	let rawdata = fs.readFileSync('./userData.json', 'utf-8')
+	let data = JSON.parse(rawdata)
+	let len = data.length
+
+	for (let i = 0; i < len; i++) {
+		if (data[i][0].toString() === member.user.id.toString()) {
+			data.splice(i, 1)
+			len--
+			console.log(`removed ${member.user.id} from userData.json`)
+			writeScript.wf('./userData.json', JSON.stringify(data))
+		}
+	}
 })
 
 bot.on('message', (message) => {
@@ -104,7 +123,7 @@ bot.on('message', (message) => {
 	if (message.content.toLowerCase().startsWith('=add ')) {
 		let item = message.content.replace('=add ', '')
 		let isnum = /^\d+$/.test(item)
-		if(isnum && Number(item<=100)) {
+		if (isnum && Number(item <= 100) && Number(item >= 10)) {
 			let userData = [message.author.id, item]
 			if (data.length == 0) {
 				data.push(userData)
@@ -129,8 +148,7 @@ bot.on('message', (message) => {
 				}
 			}
 			console.log(data)
-		}
-		else {
+		} else {
 			message.reply("Invalid input")
 		}
 	}
@@ -162,7 +180,7 @@ bot.on('message', (message) => {
 			}
 		}
 		console.log(data)
-	}	
+	}
 	if (message.content.toLowerCase().startsWith('=list')) {
 		if (data.length == 0) {
 			message.channel.send('You have nothing in your list!')
