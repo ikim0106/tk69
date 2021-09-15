@@ -14,7 +14,7 @@ class ImageSearch extends commando.Command {
 
   async run(message, args) {
     if (!auth || !auth.googleAPIKey) {
-      message.channel.sendMessage("Image search requires a Google Custom Search key.")
+      message.channel.send("Image search requires a Google Custom Search key.")
       return
     }
     request('https://www.googleapis.com/customsearch/v1?key='+auth.googleAPIKey+'&cx='+auth.googleEngineID+'&q='+args+'&searchType=image',

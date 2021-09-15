@@ -120,6 +120,19 @@ bot.on('message', (message) => {
 })
 
 bot.on('message', (message) => {
+	try {
+		if (fs.existsSync('./userData.json')) {
+			let rawdata = fs.readFileSync('./userData.json', 'utf-8')
+			if (rawdata === '') data = []
+			else {
+				data = JSON.parse(rawdata)
+			}
+		} else {
+			fs.writeFile('./userData.json', '')
+		}
+	} catch (err) {
+		console.error(err)
+	}
 	if (message.content.toLowerCase().startsWith('=add ')) {
 		let item = message.content.replace('=add ', '')
 		let isnum = /^\d+$/.test(item)
