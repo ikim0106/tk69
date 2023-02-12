@@ -1,3 +1,3 @@
-UwUbot
+UwUbot source
 
-rip rice
+placeholder: update docs
