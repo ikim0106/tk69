@@ -1,3 +1,3 @@
-UwUbot source
+segs bot source
 
 placeholder: update docs
