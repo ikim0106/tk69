@@ -1,8 +1,9 @@
 const auth = require('./auth.json')
 const fs = require('fs')
-const { Client, GatewayIntentBits, Partials } = require('discord.js')
+const { Client, GatewayIntentBits, Partials, ActivityType } = require('discord.js')
 const { StreamType, getVoiceConnection, createAudioPlayer, joinVoiceChannel, createAudioResource, NoSubscriberBehavior } = require('@discordjs/voice')
 const { generateDependencyReport } = require('@discordjs/voice')
+const pdl = require('play-dl')
 
 console.log(generateDependencyReport())
 
@@ -23,14 +24,13 @@ const musicCommands = require('./commands/music.js')
 const prefix = auth.prefix
 
 client.on('ready', () => {
+    client.user.setActivity('=help', {type: ActivityType.Listening})
+    client.audioPlayers = new Map()
+    client.musicQueues = new Map()
+    pdl.setToken(auth.youtubeCookies)
     console.log(`Logged in as ${client.user.tag}`)
-    client.player = createAudioPlayer({
-        behaviors: {
-            noSubscriber: NoSubscriberBehavior.Play,
-        },
-    })
-    client.player.musicQueues = new Map()
 })
+
 
 client.on("messageCreate", (message) => {
     if (message.author.bot) return
@@ -48,8 +48,45 @@ client.on("messageCreate", (message) => {
             case 'PLAY':
                 musicCommands.play(message, client, args)
                 break
+            case 'P':
+                musicCommands.play(message, client, args)
+                break
             case 'PLAYSTATUS':
                 musicCommands.playstatus(message, client)
+                break
+            case 'DIE':
+                musicCommands.die(message, client)
+                break
+            case 'DC':
+                musicCommands.die(message, client)
+                break
+            case 'PAUSE':
+                musicCommands.pause(message, client)
+                break
+            case 'RESUME':
+                musicCommands.resume(message, client)
+                break
+            case 'SKIP':
+                musicCommands.skip(message, client)
+                break
+            case 'NOWPLAYING':
+                musicCommands.nowplaying(message, client)
+                break
+            case 'NP':
+                musicCommands.nowplaying(message, client)
+                break
+            case 'PLAYSKIP':
+                musicCommands.playskip(message, client, args)
+                break
+            case 'SHUFFLE':
+                musicCommands.shuffle(message, client)
+                break
+            case 'QUEUE':
+                musicCommands.queue(message, client)
+                break
+            case 'Q':
+                musicCommands.queue(message, client)
+                break
         }
     }
 })
