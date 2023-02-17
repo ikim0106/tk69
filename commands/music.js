@@ -87,14 +87,14 @@ exports.play = async function(message, client, args) {
     
     let msg
     if (args[0].startsWith('https') && pdl.yt_validate(args[0]) === 'video') {
-        client.musicQueues.get(guild.id).push([args[0], message.author])
         let song = await pdl.video_info(args[0])
+        client.musicQueues.get(guild.id).push([args[0], message.author, song.video_details.title])
         msg = `Added **${song.video_details.title}** to the queue`
         console.log(msg)
     }
     else if(args[0].startsWith('https') && pdl.yt_validate(args[0]) === 'playlist') {
         const playlistInfo = await pdl.playlist_info(string, {incomplete: true})
-        playlistInfo.videos.forEach(element => client.musicQueues.get(guild.id).push([element.url, message.author]))
+        playlistInfo.videos.forEach(element => client.musicQueues.get(guild.id).push([element.url, message.author, element.title]))
         msg = `Added **${playlistInfo.videos.length} tracks** from [**${playlistInfo.title}**] to the queue`
         console.log(msg)
     }
@@ -109,7 +109,7 @@ exports.play = async function(message, client, args) {
         }
         msg = `Added **${searchRes[0].title}** to the queue`
         console.log(msg)
-        client.musicQueues.get(guild.id).push([searchRes[0].url, message.author])
+        client.musicQueues.get(guild.id).push([searchRes[0].url, message.author, searchRes[0].title])
     }
     
     let player = client.audioPlayers.get(guild.id)
@@ -450,19 +450,78 @@ exports.queue = async function(message, client) {
         return
     }
 
-    // let totalPages = Math.ceil(queue.tracks.length/10)
-    // let currentPage = 1
-    // let specialcase=0
+    let totalPages = Math.ceil(queue.length/10)
+    let currentPage = 1
+    let specialcase=0
 
-    // if(currentPage===totalPages) {
-    //     specialcase=queue.tracks.length%10
-    // }
-    // else specialcase=10
+    if(currentPage===totalPages) {
+        specialcase=queue.length%10
+    }
+    else specialcase=10
 
-    // let kontent = `**Up next**\n`
-    // for(let i=1; i<specialcase+1; i++) {
-    //     kontent += `\`${(currentPage-1)*10+i}\` **|**  ${queue[(currentPage-1)*10+(i-1)]}\n`
-    // }
+    let kontent = `**Up next**\n`
+    for(let i=1; i<specialcase+1; i++) {
+        kontent += `\`${(currentPage-1)*10+i}\` **|**  ${queue[(currentPage-1)*10+(i-1)][2]}\n`
+    }
+    kontent += `\n**Page ${currentPage} of ${totalPages}**`
+
+    const row = new ActionRowBuilder()
+        .addComponents(
+            new ButtonBuilder()
+                .setCustomId('previouspage')
+                .setStyle(ButtonStyle.Primary)
+                .setEmoji('◀️'),
+            new ButtonBuilder()
+                .setCustomId('nextpage')
+                .setStyle(ButtonStyle.Primary)
+                .setEmoji('▶️')
+        )
+
+    const embed = new EmbedBuilder()
+        .setColor('0xFFFDD1')
+        .setTitle(`🎵 Current queue  |  ${queue.length} tracks`)
+        .setDescription(kontent)
+    const reply = await message.reply({embeds: [embed], components: [row]})
+    const collector = reply.createMessageComponentCollector()
+    collector.on('collect', async button => {
+        if(!queue || !player) {
+            collector.stop()
+            reply.edit('Queue as expired')
+            return
+        }
+        button.deferUpdate()
+        // console.log(button)
+        if(!queue) return
+
+        if(queue && button.customId === 'previouspage') {
+            if(currentPage===1) return
+            else currentPage--
+        }
+        else if(queue && button.customId === 'nextpage') {
+            if(currentPage===totalPages) return
+            else currentPage++
+        }
+        else return
+
+        kontent=`**Up Next**\n`
+        specialcase=0
+        if(currentPage===totalPages) {
+            specialcase=queue.length%10
+        }
+        else specialcase=10
+
+        for(let i=1; i<specialcase+1; i++) {
+            kontent += `\`${(currentPage-1)*10+i}\` **|**  ${queue[(currentPage-1)*10+(i-1)][2]}\n`
+        }
+        kontent += `\n**Page ${currentPage} of ${totalPages}**`
+
+        const embed = new EmbedBuilder()
+            .setColor('0xFFFDD1')
+            .setTitle(`🎵 Current queue | ${queue.length} tracks`)
+            .setDescription(kontent)
+
+        reply.edit({embeds: [embed]})
+    })
 }
 
 // exports.play = async function(message, client, args) {

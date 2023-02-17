@@ -42,6 +42,9 @@ client.on("messageCreate", (message) => {
         args.shift()
 
         switch(command.toUpperCase()) {
+            case 'HELP':
+                adminCommands.help(message)
+                break
             case 'RESET':
                 adminCommands.resetBot(message, client)
                 break
