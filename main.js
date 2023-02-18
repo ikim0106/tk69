@@ -90,6 +90,12 @@ client.on("messageCreate", (message) => {
             case 'Q':
                 musicCommands.queue(message, client)
                 break
+            case 'MOVE':
+                musicCommands.move(message, client, args)
+                break
+            case 'SEEK':
+                musicCommands.seek(message, client, args)
+                break
         }
     }
 })

@@ -11,6 +11,7 @@ exports.resetBot = async function(message, client) {
 exports.help = async function(message) {
     let msg = `${auth.prefix}help is under construction. Available commands are: \n`
     msg+='\`'+Object.keys(music).join(', ')+'\`'
+    msg+='\nNote: Music commands currently only support Youtube. Spotify support is coming soon!\n'
     message.reply(msg)
     console.log(Object.keys(this))
 }
