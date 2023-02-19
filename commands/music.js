@@ -6,6 +6,7 @@ const {
     Events 
 } = require("discord.js")
 const pdl = require('play-dl')
+const auth = require('../auth.json')
 
 const { StreamType, getVoiceConnection, createAudioPlayer, joinVoiceChannel, createAudioResource, NoSubscriberBehavior } = require('@discordjs/voice')
 
@@ -144,26 +145,35 @@ exports.play = async function(message, client, args) {
         }
     }
     catch(e) {
-        console.log(e.message)
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
     return
 }
 
 exports.playstatus = async function(message, client) {
-    if(!message.guildId) {
-        message.reply('You cannot use this command in a dm')
-        return
+    try{
+        if(!message.guildId) {
+            message.reply('You cannot use this command in a dm')
+            return
+        }
+        const guild = client.guilds.cache.get(message.channel.guildId)
+        const member = guild.members.cache.get(message.author.id)
+        
+        if(!member.voice.channel) {
+            message.reply('You are not in a voice channel')
+            return
+        }
+        let player = client.audioPlayers.get(guild.id)
+        console.log(player._state.resource.metadata)
     }
-    const guild = client.guilds.cache.get(message.channel.guildId)
-    const member = guild.members.cache.get(message.author.id)
-
-    if(!member.voice.channel) {
-        message.reply('You are not in a voice channel')
-        return
+    catch(e) {
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
     }
-    let player = client.audioPlayers.get(guild.id)
-    console.log(player._state.resource.metadata)
 }
 
 exports.die = async function(message, client) {
@@ -196,7 +206,9 @@ exports.die = async function(message, client) {
         voiceConnection.destroy()
     }
     catch(e) {
-        console.log(e.message)
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
     return
@@ -226,7 +238,9 @@ exports.pause = async function(message, client) {
         client.audioPlayers.get(guild.id).pause()
     }
     catch(e) {
-        console.log(e.message)
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
     // console.log(client.audioPlayers.get(guild.id))
@@ -256,7 +270,9 @@ exports.resume = async function(message, client) {
         client.audioPlayers.get(guild.id).unpause()
     }
     catch(e) {
-        console.log(e.message)
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
     // console.log(client.audioPlayers.get(guild.id))
@@ -298,9 +314,12 @@ exports.skip = async function(message, client) {
         }
         message.react('⏭️')
         client.audioPlayers.get(guild.id).stop()
+        message.reply(`Skipped to **${queue[0][2]}**`)
     }
     catch(e) {
-        console.log(e.message)
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
 }
@@ -367,7 +386,9 @@ exports.nowplaying = async function(message, client) {
         })
     }
     catch(e) {
-        console.log(e.message)
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
 }
@@ -429,7 +450,9 @@ exports.playskip = async function(message, client, args) {
         }
     }
     catch(e) {
-        console.log(e.message)
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
 }
@@ -459,7 +482,9 @@ exports.shuffle = async function(message, client) {
         message.react('🔀')
     }
     catch(e) {
-        console.log(e.message)
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
 }
@@ -561,7 +586,9 @@ exports.queue = async function(message, client) {
         })
     }
     catch(e) {
-        console.log(e.message)
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
 }
@@ -610,7 +637,9 @@ exports.move = async function(message, client, args) {
         message.reply(`Swapped **${positionFirst[2]}** with **${positionSecond[2]}**`)
     }
     catch(e) {
-        console.log(e.message)
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
 }
@@ -667,7 +696,6 @@ exports.seek = async function(message, client, args) {
                 secs += segs
             }
         })
-        console.log(secs)
 
         let sauce = player._state.resource.metadata
         let song = await pdl.video_info(sauce.songData.url)
@@ -690,6 +718,9 @@ exports.seek = async function(message, client, args) {
         message.react('👌')
     } 
     catch(e) {
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
         if(e.message.startsWith('Seeking beyond limit.')) message.reply('Cannot seek beyond song limit')
         else message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
