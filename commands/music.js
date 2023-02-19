@@ -40,6 +40,12 @@ exports.play = async function(message, client, args) {
             guildId: message.guild.id,
             adapterCreator: message.guild.voiceAdapterCreator
         })
+
+        if(!args.length) {
+            message.reply('You have not provided a track')
+            return
+        }
+        console.log(connection)
         
         let string = args.join(' ')
 
