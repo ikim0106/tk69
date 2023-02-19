@@ -96,6 +96,9 @@ client.on("messageCreate", (message) => {
             case 'SEEK':
                 musicCommands.seek(message, client, args)
                 break
+            case 'REMOVE':
+                musicCommands.remove(message, client, args)
+                break
         }
     }
 })

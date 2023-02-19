@@ -13,13 +13,13 @@ const { StreamType, getVoiceConnection, createAudioPlayer, joinVoiceChannel, cre
 const shuffle = (array) => {
     let currentIndex = array.length,  randomIndex
     while (currentIndex != 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex)
-      currentIndex--
-      [array[currentIndex], array[randomIndex]] = [
+        randomIndex = Math.floor(Math.random() * currentIndex)
+        currentIndex--
+        [array[currentIndex], array[randomIndex]] = [
         array[randomIndex], array[currentIndex]]
     }
     return array
-  }
+}
 
 exports.play = async function(message, client, args) {
     try {
@@ -35,17 +35,28 @@ exports.play = async function(message, client, args) {
             return
         }
 
+        if(!args.length) {
+            message.reply('You have not provided a track')
+            return
+        }
         const connection = joinVoiceChannel({
             channelId: message.member.voice.channel.id,
             guildId: message.guild.id,
             adapterCreator: message.guild.voiceAdapterCreator
         })
 
-        if(!args.length) {
-            message.reply('You have not provided a track')
-            return
-        }
-        // console.log(connection)
+        connection.addListener('stateChange', async(e)=> {
+            if(connection._state.status==='disconnected') {
+                if(connection._state.reason) return
+                let audioPlayer = client.audioPlayers.get(guild.id)
+                audioPlayer.stop()
+                audioPlayer.removeAllListeners()
+                client.musicQueues.set(guild.id, [])
+                client.audioPlayers.delete(guild.id)
+                connection.destroy()
+                // console.log(client.musicQueues.get(guild.id), client.audioPlayers.get(guild.id))
+            }
+        })
         
         let string = args.join(' ')
 
@@ -203,6 +214,11 @@ exports.die = async function(message, client) {
             return
         }
         let audioPlayer = client.audioPlayers.get(guild.id)
+        if(!audioPlayer || audioPlayer._state.status==='idle') {
+            console.log(audioPlayer)
+            return
+        }
+
         message.react('⏹️')
         audioPlayer.stop()
         audioPlayer.removeAllListeners()
@@ -729,5 +745,51 @@ exports.seek = async function(message, client, args) {
         })
         if(e.message.startsWith('Seeking beyond limit.')) message.reply('Cannot seek beyond song limit')
         else message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
+    }
+}
+
+exports.remove = async function(message, client, args) {
+    try{
+        if(!message.guildId) {
+            message.reply('You cannot use this command in a dm')
+            return
+        }
+        const guild = client.guilds.cache.get(message.channel.guildId)
+        const member = guild.members.cache.get(message.author.id)
+        
+        if(!member.voice.channel) {
+            message.reply('You are not in a voice channel')
+            return
+        }
+        
+        let queue = client.musicQueues.get(guild.id)
+        let player = client.audioPlayers.get(guild.id)
+        if(!queue || !player) {
+            message.reply('Invalid index')
+            return
+        }
+        args[0] = parseInt(args[0])
+        if(isNaN(args[0])) {
+            message.reply('Invalid number provided')
+            return
+        }
+        // console.log(args[0])
+
+        let track = queue[args[0]-1]
+        if(track) {
+            queue.splice(args[0]-1, args[0])
+            client.musicQueues.set(guild.id, queue)
+            message.reply(`Removed **${track[2]}** from the queue`)
+        }
+        else {
+            return
+        }
+
+    }
+    catch(e) {
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
+        message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
     }
 }
