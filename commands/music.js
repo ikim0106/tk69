@@ -777,7 +777,7 @@ exports.remove = async function(message, client, args) {
 
         let track = queue[args[0]-1]
         if(track) {
-            queue.splice(args[0]-1, args[0])
+            queue.splice(args[0]-1, 1)
             client.musicQueues.set(guild.id, queue)
             message.reply(`Removed **${track[2]}** from the queue`)
         }
