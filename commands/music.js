@@ -45,7 +45,7 @@ exports.play = async function(message, client, args) {
             message.reply('You have not provided a track')
             return
         }
-        console.log(connection)
+        // console.log(connection)
         
         let string = args.join(' ')
 
