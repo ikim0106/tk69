@@ -1,1 +1,1 @@
-worker: npm run main
+web: npm run main
