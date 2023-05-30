@@ -144,7 +144,7 @@ exports.play = async function(message, client, args) {
             player.play(track)
 
             const embed = new EmbedBuilder()
-                .setColor('0xFFFDD1')
+                .setColor('#FFC0CB')
                 .setTitle(`Now playing: ${song.video_details.title}`)
                 .setThumbnail(song.video_details.thumbnails[song.video_details.thumbnails.length-1].url)
                 .setDescription(`${song.video_details.url}\n\nPlaying in ${member.voice.channel.name}`)
@@ -395,7 +395,7 @@ exports.nowplaying = async function(message, client) {
         
         let userData = player._state.resource.metadata.requestedBy
         const embed = new EmbedBuilder()
-        .setColor('0xFFFDD1')
+        .setColor('#FFC0CB')
         .setTitle(`Currently playing: ${songData.title}`)
         .setThumbnail(songData.thumbnails[songData.thumbnails.length-1].url)
         .setDescription(`${date1String}\u200b \u200b |\u200b \u200b ${progressBar}\u200b \u200b |\u200b \u200b  ${date2String}\n\n${songData.url}\n\nPlaying in ${member.voice.channel.name}`)
@@ -562,7 +562,7 @@ exports.queue = async function(message, client) {
             )
 
         const embed = new EmbedBuilder()
-            .setColor('0xFFFDD1')
+            .setColor('#FFC0CB')
             .setTitle(`🎵 Current queue  |  ${queue.length} tracks`)
             .setDescription(kontent)
         const reply = await message.reply({embeds: [embed], components: [row]})
@@ -600,7 +600,7 @@ exports.queue = async function(message, client) {
             kontent += `\n**Page ${currentPage} of ${totalPages}**`
 
             const embed = new EmbedBuilder()
-                .setColor('0xFFFDD1')
+                .setColor('#FFC0CB')
                 .setTitle(`🎵 Current queue | ${queue.length} tracks`)
                 .setDescription(kontent)
 
