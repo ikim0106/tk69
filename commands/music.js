@@ -196,29 +196,6 @@ exports.play = async function(message, client, args) {
     return
 }
 
-exports.playstatus = async function(message, client) {
-    try{
-        if(!message.guildId) {
-            message.reply('You cannot use this command in a dm')
-            return
-        }
-        const guild = client.guilds.cache.get(message.channel.guildId)
-        const member = guild.members.cache.get(message.author.id)
-        
-        if(!member.voice.channel) {
-            message.reply('You are not in a voice channel')
-            return
-        }
-        let player = client.audioPlayers.get(guild.id)
-        console.log(player._state.resource.metadata)
-    }
-    catch(e) {
-        client.users.fetch(auth.ownerID, false).then((user) => {
-            user.send(e.message)
-        })
-    }
-}
-
 exports.die = async function(message, client) {
     try{
         if(!message.guildId) {

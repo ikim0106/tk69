@@ -21,7 +21,7 @@ const client = new Client({
 const adminCommands = require('./commands/admin')
 const musicCommands = require('./commands/music')
 
-const prefix = auth.prefix
+const prefix = auth.prefix || '=' //defaults to =
 
 client.on('ready', () => {
     client.user.setActivity(`${prefix}help`, {type: ActivityType.Listening})
@@ -53,9 +53,6 @@ client.on("messageCreate", (message) => {
                 break
             case 'P':
                 musicCommands.play(message, client, args)
-                break
-            case 'PLAYSTATUS':
-                musicCommands.playstatus(message, client)
                 break
             case 'DIE':
                 musicCommands.die(message, client)
