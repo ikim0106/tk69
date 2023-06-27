@@ -29,10 +29,14 @@ exports.play = async function(message, client, args) {
         }
         const guild = client.guilds.cache.get(message.channel.guildId)
         const member = guild.members.cache.get(message.author.id)
+        const vc = member.voice.channel
 
         if(!member.voice.channel) {
             message.reply('You are not in a voice channel')
             return
+        }
+        else {
+            // console.log('len', member.voice.channel.members.size)
         }
 
         if(!args.length) {
@@ -40,9 +44,9 @@ exports.play = async function(message, client, args) {
             return
         }
         const connection = joinVoiceChannel({
-            channelId: message.member.voice.channel.id,
-            guildId: message.guild.id,
-            adapterCreator: message.guild.voiceAdapterCreator
+            channelId: member.voice.channel.id,
+            guildId: guild.id,
+            adapterCreator: guild.voiceAdapterCreator
         })
 
         connection.addListener('stateChange', async(e)=> {
@@ -56,6 +60,9 @@ exports.play = async function(message, client, args) {
                 connection.destroy()
                 // console.log(client.musicQueues.get(guild.id), client.audioPlayers.get(guild.id))
             }
+            // else {
+            //     console.log(connection._state)
+            // }
         })
         
         let string = args.join(' ')
@@ -68,6 +75,15 @@ exports.play = async function(message, client, args) {
             client.audioPlayers.get(guild.id).addListener('stateChange', async (e) => {
                 let player = client.audioPlayers.get(guild.id)
                 if(player._state.status === 'idle') {
+                    if(vc.members.size === 1) {
+                        let audioPlayer = client.audioPlayers.get(guild.id)
+                        audioPlayer.stop()
+                        audioPlayer.removeAllListeners()
+                        client.musicQueues.set(guild.id, [])
+                        client.audioPlayers.delete(guild.id)
+                        connection.destroy()
+                        return
+                    }
                     let queue = client.musicQueues.get(e.resource.metadata.guildId)
                     if(queue.length) {
                         let sauce = client.musicQueues.get(e.resource.metadata.guildId).shift()
@@ -87,6 +103,16 @@ exports.play = async function(message, client, args) {
                             inputType: source.type,
                         })
                         player.play(track)
+                    }
+                    else {
+                        // console.log('empty queue')
+                        let audioPlayer = client.audioPlayers.get(guild.id)
+                        audioPlayer.stop()
+                        audioPlayer.removeAllListeners()
+                        client.musicQueues.set(guild.id, [])
+                        client.audioPlayers.delete(guild.id)
+                        connection.destroy()
+                        return
                     }
                 }
                 // console.log('player:', player._state.status)

@@ -19,12 +19,12 @@ const client = new Client({
 })
 
 const adminCommands = require('./commands/admin')
-const musicCommands = require('./commands/music.js')
+const musicCommands = require('./commands/music')
 
 const prefix = auth.prefix
 
 client.on('ready', () => {
-    client.user.setActivity('=help', {type: ActivityType.Listening})
+    client.user.setActivity(`${prefix}help`, {type: ActivityType.Listening})
     client.audioPlayers = new Map()
     client.musicQueues = new Map()
     pdl.setToken(auth.youtubeCookies)
