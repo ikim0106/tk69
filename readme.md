@@ -27,7 +27,7 @@ Documentation for how to use bot commands. Default prefix is =
 |remove     |`Index of song to delete from queue (1-based indexing)`|Removes the specified song from queue| =remove 5 |
 
 TODOs: 
-add parameter parsing to "skip" command to specify how many songs to skip
-slash commands
-button commands
-Spotify support
+- add parameter parsing to "skip" command to specify how many songs to skip
+- slash commands<
+- button commands
+- Spotify support
