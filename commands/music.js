@@ -72,6 +72,7 @@ exports.play = async function(message, client, args) {
                 behaviors: {
                 noSubscriber: NoSubscriberBehavior.Play,
             }}))
+            client.audioPlayers.get(guild.id).repeat = ''
             client.audioPlayers.get(guild.id).addListener('stateChange', async (e) => {
                 let player = client.audioPlayers.get(guild.id)
                 if(player._state.status === 'idle') {
@@ -87,6 +88,7 @@ exports.play = async function(message, client, args) {
                     let queue = client.musicQueues.get(e.resource.metadata.guildId)
                     if(queue.length) {
                         let sauce = client.musicQueues.get(e.resource.metadata.guildId).shift()
+                        console.log(sauce)
                         let song = await pdl.video_info(sauce[0])
                         const source = await pdl.stream(sauce[0], {
                             quality: 3
@@ -690,7 +692,7 @@ exports.seek = async function(message, client, args) {
             return
         }
         if(!args.length) {
-            message.reply('fuck you')
+            message.reply('bruh')
             return
         }
 
@@ -788,6 +790,49 @@ exports.remove = async function(message, client, args) {
             return
         }
 
+    }
+    catch(e) {
+        client.users.fetch(auth.ownerID, false).then((user) => {
+            user.send(e.message)
+        })
+        message.reply(`Unknown error occured. Contact <@${auth.ownerID}> regarding this issue`)
+    }
+}
+
+exports.repeat = async function(message, client, args) {
+    try{
+        if(!message.guildId) {
+            message.reply('You cannot use this command in a dm')
+            return
+        }
+        const guild = client.guilds.cache.get(message.channel.guildId)
+        const member = guild.members.cache.get(message.author.id)
+        
+        if(!member.voice.channel) {
+            message.reply('You are not in a voice channel')
+            return
+        }
+        
+        let queue = client.musicQueues.get(guild.id)
+        let player = client.audioPlayers.get(guild.id)
+        if(!queue || !player || player._state.status === 'idle') {
+            message.reply('No track playing to repeat')
+            return
+        }
+
+        let songData = player._state.resource.metadata.songData
+        console.log(songData)
+
+        if(player.repeat === false) {
+            player.repeat = songData
+            client.audioPlayers.set(guild.id, player)
+            message.react('🔂')
+        }
+        else {
+            player.repeat = ''
+            client.audioPlayers.set(guild.id, player)
+            message.react('🔁')
+        }
     }
     catch(e) {
         client.users.fetch(auth.ownerID, false).then((user) => {

@@ -96,6 +96,9 @@ client.on("messageCreate", (message) => {
             case 'REMOVE':
                 musicCommands.remove(message, client, args)
                 break
+            case 'REPEAT':
+                musicCommands.repeat(message, client, args)
+                break
         }
     }
 })

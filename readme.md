@@ -28,6 +28,7 @@ Documentation for how to use bot commands. Default prefix is =
 
 TODOs: 
 - add parameter parsing to "skip" command to specify how many songs to skip
-- slash commands<
+- slash commands
 - button commands
 - Spotify support
+- repeat command to play songs on loop
