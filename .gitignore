@@ -3,6 +3,7 @@ node_modules
 
 #authentication
 auth.json
+.data
 
 #vscode junk
 .vscode
