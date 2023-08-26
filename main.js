@@ -32,12 +32,21 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}`)
 })
 
-process.on('unhandledRejection', error => {
-    client.users.fetch(auth.ownerID, false).then((user) => {
-        user.send(e.message)
-    })
-    console.log('ERROR LOG', error.message)
-})
+const handledErrors = new Set();
+
+process.on('unhandledRejection', (error) => {
+  if (handledErrors.has(error)) {
+    return;
+  }
+
+  handledErrors.add(error);
+
+  client.users.fetch(auth.ownerID, false).then((user) => {
+    user.send(error.message);
+  });
+
+  console.log('ERROR LOG', error);
+});
 
 
 client.on("messageCreate", (message) => {
