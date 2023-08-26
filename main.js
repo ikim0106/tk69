@@ -20,6 +20,7 @@ const client = new Client({
 
 const adminCommands = require('./commands/admin')
 const musicCommands = require('./commands/music')
+const nikkeCommands = require('./commands/nikke')
 
 const prefix = auth.prefix || '=' //defaults to =
 
@@ -29,6 +30,13 @@ client.on('ready', () => {
     client.musicQueues = new Map()
     pdl.setToken(auth.youtubeCookies)
     console.log(`Logged in as ${client.user.tag}`)
+})
+
+process.on('unhandledRejection', error => {
+    client.users.fetch(auth.ownerID, false).then((user) => {
+        user.send(e.message)
+    })
+    console.log('ERROR LOG', error.message)
 })
 
 
@@ -98,6 +106,9 @@ client.on("messageCreate", (message) => {
                 break
             case 'REPEAT':
                 musicCommands.repeat(message, client, args)
+                break
+            case 'TIERLIST':
+                nikkeCommands.tierlist(message, args)
                 break
         }
     }
